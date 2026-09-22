@@ -1,11 +1,392 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Career Intelligence Portal</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CareerIQ — Career Intelligence & Recruitment Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <h1>Career Intelligence & Recruitment Portal</h1>
-    <p>DBMS + AI recruitment workflow</p>
-    <p>API documentation: <a href="/docs">Open Swagger UI</a></p>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <div class="container">
+    <a href="#" class="nav-logo" data-nav="home"><span class="dot"></span>CareerIQ</a>
+    <div class="nav-links">
+      <a href="#" data-nav="home" class="active">Home</a>
+      <a href="#positions">Positions</a>
+      <a href="#career-intelligence">Career Intelligence</a>
+      <a href="#" data-nav="analyze">Analyze Any Job</a>
+      <a href="#" data-nav="dashboard">Dashboard</a>
+    </div>
+    <div class="nav-right">
+      <button class="btn btn-primary btn-sm" id="navUploadBtn">Upload resume</button>
+      <button class="nav-burger" id="burgerBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile" id="navMobile">
+  <a href="#" data-nav="home">Home</a>
+  <a href="#positions" data-close>Positions</a>
+  <a href="#career-intelligence" data-close>Career Intelligence</a>
+  <a href="#" data-nav="analyze">Analyze Any Job</a>
+  <a href="#" data-nav="dashboard">Dashboard</a>
+  <button class="btn btn-primary btn-block" id="navUploadBtnMobile">Upload resume</button>
+</div>
+
+<!-- ================= HOME VIEW ================= -->
+<main id="view-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div>
+        <div class="hero-eyebrow"><span class="pulse"></span>AI resume analysis, live on your own applicant data</div>
+        <h1>Find the role that actually<br><em>fits your skills.</em></h1>
+        <p class="lead">Upload a resume once. CareerIQ extracts your skills, checks eligibility against real position requirements, scores your match, and points you at exactly what to learn next.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" id="heroUploadBtn">Upload resume</button>
+          <a href="#positions" class="btn btn-secondary">Explore positions</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="preview-card">
+          <div class="pc-top">
+            <div>
+              <div class="pc-role">Backend Developer</div>
+              <div class="pc-title">TechNova Solutions</div>
+            </div>
+          </div>
+          <div class="preview-ring">
+            <svg viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="#EEF0F9" stroke-width="3.5"/>
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="#4338CA" stroke-width="3.5" stroke-linecap="round"
+                stroke-dasharray="97.4" stroke-dashoffset="32.5" transform="rotate(-90 18 18)"/>
+            </svg>
+            <div>
+              <div class="ring-num">67%</div>
+              <div class="ring-label">match score</div>
+            </div>
+          </div>
+          <div class="preview-chips">
+            <span class="chip matched">Python</span>
+            <span class="chip matched">SQL</span>
+            <span class="chip gap">Docker</span>
+          </div>
+        </div>
+        <div class="mini-card eligible">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+          GPA requirement met
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <h2>From resume to roadmap in five steps</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><h4>Upload resume</h4><p>Drop in a PDF, DOCX or TXT — no forms to fill in by hand.</p></div>
+        <div class="step"><h4>AI extracts skills</h4><p>Skills, GPA and experience are pulled out and matched to your profile.</p></div>
+        <div class="step"><h4>Match with positions</h4><p>Every open role is scored against your actual skill set.</p></div>
+        <div class="step"><h4>Discover skill gaps</h4><p>See exactly which requirements you're missing, per role.</p></div>
+        <div class="step"><h4>Learn & improve</h4><p>Get YouTube courses picked for each gap, ready to start today.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured positions -->
+  <section class="section" id="positions">
+    <div class="container">
+      <div class="section-head">
+        <h2>Recommended positions</h2>
+        <p>Real openings pulled from the portal's database — click a role to see your live match.</p>
+      </div>
+      <div class="pos-grid" id="posGrid"><!-- position cards injected by app.js --></div>
+    </div>
+  </section>
+
+  <!-- Career intelligence teaser -->
+  <section class="section section-alt" id="career-intelligence">
+    <div class="container">
+      <div class="ci-grid">
+        <div>
+          <div class="section-head" style="margin-bottom:20px;">
+            <h2>Career Intelligence</h2>
+            <p>We found a few skills that could improve your match. Upload your resume to see your own gaps here.</p>
+          </div>
+          <button class="btn btn-secondary" id="ciUploadBtn">Analyze my resume</button>
+        </div>
+        <div>
+          <div class="gap-card">
+            <div class="gap-card-left"><span class="gap-dot"></span> Docker</div>
+            <button class="btn btn-sm btn-secondary" disabled>Learn Docker</button>
+          </div>
+          <div class="gap-card">
+            <div class="gap-card-left"><span class="gap-dot"></span> React</div>
+            <button class="btn btn-sm btn-secondary" disabled>Learn React</button>
+          </div>
+          <p style="font-size:13px;color:var(--ink-faint);margin-top:10px;">Example gaps shown — your dashboard will use your real analysis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-strip">
+    <div class="stat"><div class="num">AI</div><div class="lbl">Resume analysis</div></div>
+    <div class="stat"><div class="num">Live</div><div class="lbl">Automated matching</div></div>
+    <div class="stat"><div class="num">Per-role</div><div class="lbl">Skill gap detection</div></div>
+    <div class="stat"><div class="num">YouTube</div><div class="lbl">Learning recommendations</div></div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="final-cta">
+        <h2>Ready to discover your career match?</h2>
+        <p>It takes one resume and about ten seconds.</p>
+        <button class="btn btn-primary" id="finalUploadBtn">Upload resume</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">CareerIQ — Career Intelligence & Recruitment Portal · College DBMS project</footer>
+</main>
+
+<!-- ================= DASHBOARD VIEW ================= -->
+<section id="view-dashboard">
+  <div class="container">
+    <div class="dash-header">
+      <h1 class="dash-greeting" id="dashGreeting">Good morning 👋</h1>
+      <p class="dash-sub" id="dashSub">Here's how your resume matches against Backend Developer.</p>
+    </div>
+
+    <div class="dash-cards">
+      <div class="dash-card score">
+        <div class="dash-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.2L18.5 21 12 16.8 5.5 21l2-7.8L2 9h7z"/></svg></div>
+        <div class="dash-card-val" id="cardScore">—</div>
+        <div class="dash-card-lbl">Match score</div>
+      </div>
+      <div class="dash-card eligible">
+        <div class="dash-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div>
+        <div class="dash-card-val" id="cardEligible">—</div>
+        <div class="dash-card-lbl">Eligibility</div>
+      </div>
+      <div class="dash-card skills">
+        <div class="dash-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
+        <div class="dash-card-val" id="cardSkills">—</div>
+        <div class="dash-card-lbl">Skills identified</div>
+      </div>
+      <div class="dash-card gaps">
+        <div class="dash-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></div>
+        <div class="dash-card-val" id="cardGaps">—</div>
+        <div class="dash-card-lbl">Skill gaps</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Your skill gaps</h2>
+      <p>Close these to raise your match score for this role.</p>
+    </div>
+    <div class="gaps-list" id="dashGapsList"></div>
+
+    <div style="height:80px;"></div>
+  </div>
+</section>
+
+<!-- ================= ANALYZE ANY JOB VIEW ================= -->
+<section id="view-analyze">
+  <div class="container">
+    <div class="dash-header">
+      <h1 class="dash-greeting">Analyze Any Job</h1>
+      <p class="dash-sub">Paste a job posting or description to see how well it matches your profile.</p>
+    </div>
+
+    <div class="analyze-card">
+      <div class="analyze-input-group">
+        <label for="jobUrlInput">Job URL</label>
+        <input type="url" id="jobUrlInput" placeholder="https://company.com/jobs/backend-developer">
+      </div>
+
+      <div class="analyze-divider"><span>OR</span></div>
+
+      <div class="analyze-input-group">
+        <label for="jobDescInput">Job description</label>
+        <textarea id="jobDescInput" rows="8" placeholder="Paste the job description here..."></textarea>
+      </div>
+
+      <div class="error-state" id="analyzeError" style="display:none;"></div>
+
+      <button class="btn btn-primary btn-block" id="analyzeJobBtn" style="margin-top:22px;">Analyze job</button>
+    </div>
+
+    <div class="loading-state" id="analyzeLoading" style="display:none; margin-top:28px;">
+      <div class="loading-ring"></div>
+      <div class="loading-msg" id="analyzeLoadingMsg">Analyzing job…</div>
+    </div>
+
+    <!-- Result card, populated by app.js after a successful analyze -->
+    <div class="analyze-result" id="analyzeResult" style="display:none;">
+
+      <div class="result-card">
+        <div class="result-card-head">
+          <div>
+            <h5>Job details</h5>
+            <div class="pos-title" id="resultJobTitle">—</div>
+            <div class="pos-meta"><span id="resultJobCompany">—</span> · <span id="resultJobLocation">—</span></div>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="viewOriginalJobBtn" style="display:none;">View original job</button>
+        </div>
+
+        <div class="result-skill-block">
+          <h5>Required skills</h5>
+          <div class="pos-skills" id="resultReqSkills"></div>
+        </div>
+        <div class="result-skill-block">
+          <h5>Optional skills</h5>
+          <div class="pos-skills" id="resultOptSkills"></div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <h5 style="margin-bottom:6px;">Match result</h5>
+        <div class="match-hero" style="border-bottom:none;">
+          <div class="match-ring-wrap">
+            <svg viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
+              <circle class="ring-fg" id="jobMatchRingFg" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+            </svg>
+            <div class="match-ring-num" id="jobMatchRingNum">0%</div>
+          </div>
+          <div style="color:var(--ink-soft);font-size:14px;">Your match</div>
+        </div>
+
+        <div class="match-cols">
+          <div class="match-col">
+            <h5>Matched skills</h5>
+            <div class="match-list" id="jobMatchedList"></div>
+          </div>
+          <div class="match-col">
+            <h5>Skill gaps</h5>
+            <div class="match-list" id="jobGapList"></div>
+          </div>
+        </div>
+
+        <div class="elig-list" id="jobEligList"></div>
+
+        <div class="compare-grid">
+          <div class="compare-item">
+            <div class="ci-label">GPA (yours / required)</div>
+            <div class="ci-value" id="compareGpa">— / —</div>
+          </div>
+          <div class="compare-item">
+            <div class="ci-label">Experience (yours / required)</div>
+            <div class="ci-value" id="compareExperience">— / —</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="buildRoadmapBtn" style="margin-top:24px; display:none;">Build my learning roadmap</button>
+      </div>
+    </div>
+
+    <div style="height:80px;"></div>
+  </div>
+</section>
+
+<!-- ================= MODALS ================= -->
+
+<!-- Upload modal -->
+<div class="modal-backdrop" id="modalUpload">
+  <div class="modal">
+    <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+
+    <div id="uploadStepForm">
+      <h3>Upload your resume</h3>
+      <p class="modal-desc">We'll extract your skills and match them against open positions.</p>
+      <form id="dropzoneForm">
+        <label class="dropzone" id="dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+          <div class="dz-title">Drag & drop resume here</div>
+          <div class="dz-sub">or click to browse files</div>
+          <div class="dz-filename" id="dzFilename"></div>
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt">
+        </label>
+      </form>
+      <div class="format-note">Supported formats: PDF · DOCX · TXT</div>
+      <button class="btn btn-primary btn-block" id="analyzeBtn" style="margin-top:22px;" disabled>Analyze resume</button>
+    </div>
+
+    <div id="uploadStepLoading" class="loading-state" style="display:none;">
+      <div class="loading-ring"></div>
+      <div class="loading-msg" id="loadingMsg">Analyzing your resume…</div>
+      <div class="loading-substeps">
+        <div class="loading-substep" data-step="0"><span class="dot"></span>Extracting skills</div>
+        <div class="loading-substep" data-step="1"><span class="dot"></span>Checking career opportunities</div>
+        <div class="loading-substep" data-step="2"><span class="dot"></span>Finding your skill gaps</div>
+      </div>
+    </div>
+
+    <div id="uploadStepSuccess" class="success-state" style="display:none;">
+      <div class="success-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>
+      <h3>Resume analyzed successfully</h3>
+      <p class="modal-desc">Taking you to your dashboard…</p>
+    </div>
+  </div>
+</div>
+
+<!-- Match result modal -->
+<div class="modal-backdrop" id="modalMatch">
+  <div class="modal">
+    <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+    <h3 id="matchPosTitle">Position</h3>
+    <div class="match-hero">
+      <div class="match-ring-wrap">
+        <svg viewBox="0 0 120 120">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4338CA"/><stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
+          <circle class="ring-fg" id="matchRingFg" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="match-ring-num" id="matchRingNum">0%</div>
+      </div>
+      <div style="color:var(--ink-soft);font-size:14px;">Your match</div>
+    </div>
+    <div class="match-cols">
+      <div class="match-col">
+        <h5>Matched skills</h5>
+        <div class="match-list" id="matchedList"></div>
+      </div>
+      <div class="match-col">
+        <h5>Skill gaps</h5>
+        <div class="match-list" id="gapList"></div>
+      </div>
+    </div>
+    <div class="elig-list" id="eligList"></div>
+  </div>
+</div>
+
+<!-- Learning recommendations modal -->
+<div class="modal-backdrop" id="modalLearn">
+  <div class="modal modal-wide">
+    <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+    <h3 id="learnTitle">Learn a skill</h3>
+    <p class="modal-desc" id="learnDesc">Curated videos to help you close this gap.</p>
+    <div id="learnBody" style="margin-top:20px;"></div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="/static/js/app.js"></script>
 </body>
 </html>
