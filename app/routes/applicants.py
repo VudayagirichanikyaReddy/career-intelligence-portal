@@ -748,3 +748,64 @@ def evaluate_applicant(
         "skill_gap": skill_gap,
         "summary": ai_summary
     }
+
+class AddSkillRequest(BaseModel):
+    skill_name: str
+    proficiency_level: str = "Intermediate"
+
+
+@router.post("/{applicant_id}/add-skill")
+def add_applicant_skill(
+    applicant_id: int,
+    request: AddSkillRequest,
+    db: Session = Depends(get_db)
+):
+    skill_name = request.skill_name.strip()
+    if not skill_name:
+        raise HTTPException(status_code=400, detail="Skill name cannot be empty.")
+
+    # 1. Find or create skill in skills table
+    skill = db.execute(
+        text("SELECT skill_id, skill_name FROM skills WHERE LOWER(skill_name) = LOWER(:s)"),
+        {"s": skill_name}
+    ).fetchone()
+
+    if not skill:
+        db.execute(
+            text("INSERT INTO skills (skill_name) VALUES (:s)"),
+            {"s": skill_name}
+        )
+        db.commit()
+        skill = db.execute(
+            text("SELECT skill_id, skill_name FROM skills WHERE LOWER(skill_name) = LOWER(:s)"),
+            {"s": skill_name}
+        ).fetchone()
+
+    # 2. Check if applicant already has this skill
+    exists = db.execute(
+        text("""
+            SELECT applicant_id FROM applicant_skills
+            WHERE applicant_id = :applicant_id AND skill_id = :skill_id
+        """),
+        {"applicant_id": applicant_id, "skill_id": skill.skill_id}
+    ).fetchone()
+
+    if not exists:
+        db.execute(
+            text("""
+                INSERT INTO applicant_skills (applicant_id, skill_id)
+                VALUES (:applicant_id, :skill_id)
+            """),
+            {
+                "applicant_id": applicant_id,
+                "skill_id": skill.skill_id,
+                
+            }
+        )
+        db.commit()
+
+    return {
+        "message": f"Skill {skill_name} added successfully",
+        "skill_name": skill.skill_name,
+        "applicant_id": applicant_id
+    }
