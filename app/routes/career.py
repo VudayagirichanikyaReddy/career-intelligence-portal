@@ -206,7 +206,7 @@ def download_match_report(
     pdf_bytes = generate_match_report_pdf(eval_data, app_info, pos_info, recs)
     clean_name = (applicant.full_name or "Candidate").replace(" ", "_")
     clean_title = (position.title or "Role").replace(" ", "_")
-    filename = f"CareerIQ_Report_{clean_name}_{clean_title}.pdf"
+    filename = f"Career_Sensei_Report_{clean_name}_{clean_title}.pdf"
 
     return Response(
         content=pdf_bytes,

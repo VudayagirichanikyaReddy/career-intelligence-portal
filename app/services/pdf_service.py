@@ -33,14 +33,14 @@ class WatermarkedCanvas(canvas.Canvas):
         self.setFillColor(colors.HexColor("#6366f1"), alpha=0.08)
         self.translate(300, 420)
         self.rotate(42)
-        self.drawCentredString(0, 0, "CAREERIQ VERIFIED")
+        self.drawCentredString(0, 0, "CAREER SENSEI VERIFIED")
         self.restoreState()
 
     def draw_footer(self, total_pages):
         self.saveState()
         self.setFont("Helvetica", 9)
         self.setFillColor(colors.HexColor("#7b879c"))
-        self.drawString(54, 32, "CareerIQ Candidate Intelligence Report · Confidential")
+        self.drawString(54, 32, "Career Sensei Candidate Intelligence Report · Confidential")
         self.drawRightString(612 - 54, 32, f"Page {self._pageNumber} of {total_pages}")
         self.restoreState()
 
@@ -107,7 +107,7 @@ def generate_match_report_pdf(eval_data: dict, applicant_info: dict, position_in
     # 1. Header Banner
     header_data = [
         [
-            Paragraph("<b>CareerIQ</b> · Candidate Evaluation Audit", title_style),
+            Paragraph("<b>Career Sensei</b> · Candidate Evaluation Audit", title_style),
             Paragraph(f"Generated: {datetime.now().strftime('%b %d, %Y')}<br/>Report ID: #RPT-{position_info.get('position_id', 1):03d}-{applicant_info.get('applicant_id', 1):03d}", subtitle_style)
         ]
     ]

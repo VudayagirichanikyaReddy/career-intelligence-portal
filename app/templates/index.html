@@ -1,84 +1,92 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
-<title>CareerIQ — Career Intelligence & Recruitment Portal</title>
+<meta name="color-scheme" content="light dark">
+<title>Career Sensei — Career Intelligence & Recruitment Portal</title>
+<!-- NEW: apply saved theme before first paint (prevents a flash of the wrong theme) -->
 <script>
 (function(){
-  var t = 'dark';
-  try { if (localStorage.getItem('careeriq-theme') === 'light') t = 'light'; } catch(e){}
+  var t = 'light', saved = null;
+  try { saved = localStorage.getItem('careeriq-theme'); } catch(e){}
+  if (saved === 'light' || saved === 'dark') t = saved;
+  else if (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
   document.documentElement.setAttribute('data-theme', t);
+  if (window.IntersectionObserver && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    document.documentElement.classList.add('js-reveal');
+  }
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/style.css?v=777777">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css?v=108">
 </head>
 <body>
 
 <!-- ================= NAV ================= -->
 <nav class="nav">
   <div class="container">
-    <a href="#" class="nav-logo" data-nav="home"><span class="dot"></span>CareerIQ</a>
+    <a href="#" class="nav-logo" data-nav="home"><span class="dot"></span>Career Sensei</a>
     <div class="nav-links">
       <a href="#" data-nav="home" class="active">Home</a>
-      <a href="#positions" data-nav="home" data-scroll="positions">Positions</a>
-      <a href="#career-intelligence" data-nav="home" data-scroll="career-intelligence">Career Intelligence</a>
+      <a href="#/positions" data-nav="positions">Positions</a>
+      <a href="#/career-intelligence" data-nav="career-intelligence">Career Intelligence</a>
       <a href="#" data-nav="analyze">Analyze Any Job</a>
       <a href="#" data-nav="dashboard">Dashboard</a>
       <a href="#" data-nav="my-applications">My Applications</a>
       <a href="#" data-nav="recruiter">Recruiter Hub</a>
     </div>
     <div class="nav-right">
-      <!-- Theme Switcher Pill -->
-      <button class="theme-toggle" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Toggle theme">
+      <!-- NEW: theme switcher pill -->
+      <button class="theme-toggle" id="themeToggle" type="button" role="switch" aria-checked="true" aria-label="Toggle light and dark theme">
         <span class="theme-toggle-thumb"></span>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
       </button>
-
-      <!-- Auth Action -->
+      <!-- NEW: sign in / profile -->
       <button class="btn btn-secondary btn-sm" id="navSignInBtn" type="button">Sign in</button>
       <button class="profile-pill" id="navProfileBtn" type="button" hidden aria-label="Open profile">
         <span class="avatar" id="navAvatar">U</span>
         <span class="profile-email" id="navProfileEmail"></span>
       </button>
-
       <button class="btn btn-primary btn-sm" id="navUploadBtn">Upload resume</button>
       <button class="nav-burger" id="burgerBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
-
 <div class="nav-mobile" id="navMobile">
   <a href="#" data-nav="home">Home</a>
-  <a href="#positions" data-nav="home" data-scroll="positions" data-close>Positions</a>
-  <a href="#career-intelligence" data-nav="home" data-scroll="career-intelligence" data-close>Career Intelligence</a>
+  <a href="#/positions" data-nav="positions" data-close>Positions</a>
+  <a href="#/career-intelligence" data-nav="career-intelligence" data-close>Career Intelligence</a>
   <a href="#" data-nav="analyze">Analyze Any Job</a>
   <a href="#" data-nav="dashboard">Dashboard</a>
-      <a href="#" data-nav="my-applications">My Applications</a>
-      <a href="#" data-nav="recruiter">Recruiter Hub</a>
+  <a href="#" data-nav="my-applications">My Applications</a>
+  <a href="#" data-nav="recruiter">Recruiter Hub</a>
   <button class="btn btn-primary btn-block" id="navUploadBtnMobile">Upload resume</button>
 </div>
 
 <!-- ================= HOME VIEW ================= -->
 <main id="view-home">
+
   <!-- Hero -->
   <section class="hero">
     <div class="container">
       <div>
         <div class="hero-eyebrow"><span class="pulse"></span>AI resume analysis, live on your own applicant data</div>
         <h1>Find the role that actually<br><em>fits your skills.</em></h1>
-        <p class="lead">Upload a resume once. CareerIQ extracts your skills, checks eligibility against real position requirements, scores your match, and points you at exactly what to learn next.</p>
+        <p class="lead">Upload a resume once. Career Sensei extracts your skills, checks eligibility against real position requirements, scores your match, and points you at exactly what to learn next.</p>
         <div class="hero-ctas">
           <button class="btn btn-primary" id="heroUploadBtn">Upload resume</button>
-          <a href="#positions" class="btn btn-secondary">Explore positions</a>
+          <a href="#/positions" data-nav="positions" class="btn btn-secondary">Explore positions</a>
         </div>
       </div>
       <div class="hero-visual">
+        <span class="hero-shape s1" aria-hidden="true"></span>
+        <span class="hero-shape s2" aria-hidden="true"></span>
+        <span class="hero-shape s3" aria-hidden="true"></span>
+        <span class="hero-shape s4" aria-hidden="true"></span>
         <div class="preview-card">
           <div class="pc-top">
             <div>
@@ -89,7 +97,7 @@
           <div class="preview-ring">
             <svg viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.5" fill="none" stroke="#EEF0F9" stroke-width="3.5"/>
-              <circle cx="18" cy="18" r="15.5" fill="none" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="#4338CA" stroke-width="3.5" stroke-linecap="round"
                 stroke-dasharray="97.4" stroke-dashoffset="32.5" transform="rotate(-90 18 18)"/>
             </svg>
             <div>
@@ -111,6 +119,36 @@
     </div>
   </section>
 
+
+  <section class="portal-placards" aria-label="Explore Career Sensei">
+    <div class="container">
+      <div class="placard-heading">
+        <span class="discovery-kicker"><span class="discovery-kicker-dot"></span>YOUR CAREER, IN MOTION</span>
+        <h2>What would you like to do?</h2>
+      </div>
+      <div class="portal-placard-grid">
+        <a class="portal-placard placard-jobs" href="#/positions" data-nav="positions">
+          <span class="placard-topline"><span class="placard-index">01 / DISCOVER</span><span class="placard-icon" aria-hidden="true">↗</span></span>
+          <span class="placard-art placard-art-jobs" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="placard-copy"><strong>Find your next role</strong><small>Explore real openings and find a position that fits your skills.</small></span>
+          <span class="placard-action">Explore positions <span aria-hidden="true">→</span></span>
+        </a>
+        <button class="portal-placard placard-match" id="featureUploadBtn" type="button">
+          <span class="placard-topline"><span class="placard-index">02 / GET YOUR MATCH</span><span class="placard-icon" aria-hidden="true">✦</span></span>
+          <span class="placard-art placard-art-match" aria-hidden="true"><i class="match-orbit"></i><i class="match-orbit"></i><b>AI</b></span>
+          <span class="placard-copy"><strong>See where you stand</strong><small>Upload your resume for a live skills match and learning roadmap.</small></span>
+          <span class="placard-action">Analyze my resume <span aria-hidden="true">→</span></span>
+        </button>
+        <a class="portal-placard placard-track" href="#" data-nav="my-applications">
+          <span class="placard-topline"><span class="placard-index">03 / KEEP MOVING</span><span class="placard-icon" aria-hidden="true">✓</span></span>
+          <span class="placard-art placard-art-track" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="placard-copy"><strong>Track your journey</strong><small>Keep up with applications, interviews, and the offer you’re working toward.</small></span>
+          <span class="placard-action">My applications <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- How it works -->
   <section class="section section-alt">
     <div class="container">
@@ -127,43 +165,7 @@
     </div>
   </section>
 
-  <!-- Featured positions -->
-  <section class="section" id="positions">
-    <div class="container">
-      <div class="section-head">
-        <h2>Recommended positions</h2>
-        <p>Real openings pulled from the portal's database — click a role to see your live match.</p>
-      </div>
-      <div class="pos-grid" id="posGrid"></div>
-    </div>
-  </section>
-
-  <!-- Career intelligence teaser -->
-  <section class="section section-alt" id="career-intelligence">
-    <div class="container">
-      <div class="ci-grid">
-        <div>
-          <div class="section-head" style="margin-bottom:20px;">
-            <h2>Career Intelligence</h2>
-            <p>We found a few skills that could improve your match. Upload your resume to see your own gaps here.</p>
-          </div>
-          <button class="btn btn-secondary" id="ciUploadBtn">Analyze my resume</button>
-        </div>
-        <div>
-          <div class="gap-card">
-            <div class="gap-card-left"><span class="gap-dot"></span> Docker</div>
-            <button class="btn btn-sm btn-secondary" disabled>Learn Docker</button>
-          </div>
-          <div class="gap-card">
-            <div class="gap-card-left"><span class="gap-dot"></span> React</div>
-            <button class="btn btn-sm btn-secondary" disabled>Learn React</button>
-          </div>
-          <p style="font-size:13px;color:var(--ink-faint);margin-top:10px;">Example gaps shown — your dashboard will use your real analysis.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  <section class="section section-alt home-ci-teaser"><div class="container ci-teaser-panel"><div><span class="discovery-kicker">YOUR PERSONAL CAREER GUIDE</span><h2>Turn your resume into a clear next step.</h2><p>See your match score, strengths, eligibility and practical next steps.</p></div><a class="btn btn-primary" href="#/career-intelligence" data-nav="career-intelligence">Open Career Intelligence ↗</a></div></section>
   <!-- Stats -->
   <section class="stats-strip">
     <div class="stat"><div class="num">AI</div><div class="lbl">Resume analysis</div></div>
@@ -183,8 +185,59 @@
     </div>
   </section>
 
-  <footer class="footer">CareerIQ — Career Intelligence & Recruitment Portal</footer>
+  <footer class="footer">Career Sensei — Career Intelligence & Recruitment Portal · College DBMS project</footer>
 </main>
+
+<!-- Dedicated full-page positions view -->
+<main id="view-positions"><section class="page-hero positions-hero"><div class="container page-hero-grid"><div><span class="discovery-kicker">✦ OPEN DOORS, REAL OPPORTUNITIES</span><h1>Find the role<br><em>that moves you.</em></h1><p>Browse live openings, explore hiring teams, and find a position that fits where you want to go.</p><label class="position-search"><span>⌕</span><input id="positionSearch" type="search" placeholder="Search roles, companies or skills" aria-label="Search positions"><button id="clearPositionSearch" type="button" hidden>×</button></label></div><div class="page-hero-art positions-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit-core">GO<br>FOR IT</div><span class="orbit-tag tag-one">Your next chapter</span><span class="orbit-tag tag-two">Live openings ↗</span></div></div></section><div class="positions-content">
+  <!-- Live discovery: categories and companies are populated from open database positions -->
+  <section class="section hiring-discovery" id="career-explore">
+    <div class="container">
+      <div class="discovery-heading">
+        <div>
+          <span class="discovery-kicker"><span class="discovery-kicker-dot"></span>YOUR NEXT OPPORTUNITY</span>
+          <h2>Find your <em>next move.</em></h2>
+          <p>Explore live openings by field or see which companies are hiring.</p>
+        </div>
+        <a href="#/positions" class="discovery-see-all" data-nav="positions">Browse all jobs <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="category-rail" id="jobCategoryGrid" aria-label="Job categories" aria-live="polite">
+        <div class="discovery-loading">Finding open roles…</div>
+      </div>
+      <div class="discovery-company-heading">
+        <div>
+          <span class="discovery-kicker">REAL OPENINGS FROM YOUR PORTAL</span>
+          <h3>Companies hiring now</h3>
+        </div>
+        <div class="company-rail-controls" aria-label="Company cards scrolling controls">
+          <button class="rail-arrow" type="button" data-rail="companyHiringGrid" data-direction="-1" aria-label="Scroll companies left">‹</button>
+          <button class="rail-arrow" type="button" data-rail="companyHiringGrid" data-direction="1" aria-label="Scroll companies right">›</button>
+        </div>
+      </div>
+      <div class="company-rail" id="companyHiringGrid" aria-label="Companies with open positions" aria-live="polite">
+        <div class="discovery-loading">Loading hiring companies…</div>
+      </div>
+      <div class="discovery-filter-bar">
+        <span id="hiringFilterStatus" aria-live="polite">Loading live positions…</span>
+        <button class="filter-reset" id="clearHiringFilter" type="button" hidden>Clear filter</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured positions -->
+  <section class="section" id="positions">
+    <div class="container">
+      <div class="section-head">
+        <h2>Recommended positions</h2>
+        <p>Real openings pulled from the portal's database — click a role to see your live match.</p>
+      </div>
+      <div class="pos-grid" id="posGrid"><!-- position cards injected by app.js --></div>
+    </div>
+  </section>
+
+</div></main>
+<!-- Dedicated career intelligence view -->
+<main id="view-career-intelligence"><section class="page-hero intelligence-hero"><div class="container page-hero-grid"><div><span class="discovery-kicker">✦ YOUR SKILLS, WITH A GAME PLAN</span><h1>Make your next move<br><em>with confidence.</em></h1><p>Your personal career snapshot turns resume details into a match score, strengths, eligibility and practical next steps.</p><button class="btn btn-primary" id="intelligenceUploadBtn">Build my career snapshot</button></div><div class="page-hero-art intelligence-art" aria-hidden="true"><div class="intel-ring"><span>CS</span></div><div class="intel-chip intel-chip-one">Skills ↗</div><div class="intel-chip intel-chip-two">Next steps ✦</div><div class="intel-chip intel-chip-three">Your future</div></div></div></section><section class="container intelligence-content"><div class="intelligence-empty" id="intelligenceEmpty"><div class="empty-orbit">✦</div><div><span class="discovery-kicker">READY WHEN YOU ARE</span><h2>Your career map starts with your resume.</h2><p>Upload once and Career Sensei will fill this page with your real skill match, role eligibility and learning actions.</p><button class="btn btn-primary" id="emptyIntelligenceUploadBtn">Upload resume</button></div></div><div id="intelligencePopulated" hidden><div class="intelligence-summary"><div><span class="discovery-kicker">YOUR LIVE CAREER SNAPSHOT</span><h2 id="intelligenceRole">Your role match</h2><p id="intelligenceRoleMeta"></p></div><div class="intel-score"><span id="intelligenceScore">—%</span><small>match score</small></div></div><div class="intel-metric-grid"><article class="intel-metric"><span>Eligibility</span><strong id="intelligenceEligibility">—</strong></article><article class="intel-metric"><span>Matched skills</span><strong id="intelligenceMatchedCount">0</strong></article><article class="intel-metric"><span>Growth areas</span><strong id="intelligenceGapCount">0</strong></article></div><div class="intel-columns"><article class="intel-panel"><div class="intel-panel-head"><span class="intel-panel-icon">✓</span><div><h3>Your strengths</h3><p>Skills aligned with this role</p></div></div><div id="intelligenceMatched" class="intel-skill-list"></div></article><article class="intel-panel growth-panel"><div class="intel-panel-head"><span class="intel-panel-icon">✦</span><div><h3>Your next steps</h3><p>Build these skills to strengthen your fit</p></div></div><div id="intelligenceGaps" class="intel-gap-list"></div></article></div><button class="btn btn-secondary" id="intelligenceUploadAgainBtn">Update resume</button></div></section></main>
 
 <!-- ================= MY APPLICATIONS VIEW ================= -->
 <section id="view-my-applications">
@@ -320,25 +373,8 @@
 <section id="view-dashboard">
   <div class="container">
     <div class="dash-header">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
-        <div>
-          <h1 class="dash-greeting" id="dashGreeting">Good morning 👋</h1>
-          <p class="dash-sub" id="dashSub">Here's how your resume matches against your target role.</p>
-        </div>
-        <div class="dash-toolbar">
-          <div class="role-select-wrap">
-            <label class="role-select-label" for="dashPositionSelect">Target Role:</label>
-            <select class="role-select" id="dashPositionSelect"></select>
-          </div>
-          <button class="btn btn-primary btn-sm apply-action-btn" id="dashApplyBtn" type="button">
-            Apply for this Role
-          </button>
-          <button class="btn btn-secondary btn-sm" id="dashDownloadReportBtn" type="button" style="margin-left:8px;" title="Download Verified PDF Report">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;display:inline-block;vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download Report (PDF)
-          </button>
-        </div>
-      </div>
+      <h1 class="dash-greeting" id="dashGreeting">Good morning 👋</h1>
+      <p class="dash-sub" id="dashSub">Here's how your resume matches against Backend Developer.</p>
     </div>
 
     <div class="dash-cards">
@@ -365,16 +401,18 @@
     </div>
 
     <div class="section-head">
+      <!-- NEW: heading + paragraph wrapped in a div so the "+ Add Skill" pill can sit on the right -->
       <div>
         <h2>Your skill gaps</h2>
         <p>Close these to raise your match score for this role.</p>
       </div>
       <button class="add-skill-pill" id="addSkillBtn" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
         Add Skill
       </button>
     </div>
     <div class="gaps-list" id="dashGapsList"></div>
+
     <div style="height:80px;"></div>
   </div>
 </section>
@@ -390,14 +428,18 @@
     <div class="analyze-card">
       <div class="analyze-input-group">
         <label for="jobUrlInput">Job URL</label>
-        <input type="url" id="jobUrlInput" placeholder="https://company.com/jobs/developer">
+        <input type="url" id="jobUrlInput" placeholder="https://company.com/jobs/backend-developer">
       </div>
+
       <div class="analyze-divider"><span>OR</span></div>
+
       <div class="analyze-input-group">
         <label for="jobDescInput">Job description</label>
         <textarea id="jobDescInput" rows="8" placeholder="Paste the job description here..."></textarea>
       </div>
+
       <div class="error-state" id="analyzeError" style="display:none;"></div>
+
       <button class="btn btn-primary btn-block" id="analyzeJobBtn" style="margin-top:22px;">Analyze job</button>
     </div>
 
@@ -406,7 +448,9 @@
       <div class="loading-msg" id="analyzeLoadingMsg">Analyzing job…</div>
     </div>
 
+    <!-- Result card, populated by app.js after a successful analyze -->
     <div class="analyze-result" id="analyzeResult" style="display:none;">
+
       <div class="result-card">
         <div class="result-card-head">
           <div>
@@ -416,6 +460,7 @@
           </div>
           <button class="btn btn-secondary btn-sm" id="viewOriginalJobBtn" style="display:none;">View original job</button>
         </div>
+
         <div class="result-skill-block">
           <h5>Required skills</h5>
           <div class="pos-skills" id="resultReqSkills"></div>
@@ -438,6 +483,7 @@
           </div>
           <div style="color:var(--ink-soft);font-size:14px;">Your match</div>
         </div>
+
         <div class="match-cols">
           <div class="match-col">
             <h5>Matched skills</h5>
@@ -448,7 +494,9 @@
             <div class="match-list" id="jobGapList"></div>
           </div>
         </div>
+
         <div class="elig-list" id="jobEligList"></div>
+
         <div class="compare-grid">
           <div class="compare-item">
             <div class="ci-label">GPA (yours / required)</div>
@@ -459,9 +507,11 @@
             <div class="ci-value" id="compareExperience">— / —</div>
           </div>
         </div>
+
         <button class="btn btn-primary btn-block" id="buildRoadmapBtn" style="margin-top:24px; display:none;">Build my learning roadmap</button>
       </div>
     </div>
+
     <div style="height:80px;"></div>
   </div>
 </section>
@@ -472,6 +522,7 @@
 <div class="modal-backdrop" id="modalUpload">
   <div class="modal">
     <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+
     <div id="uploadStepForm">
       <h3>Upload your resume</h3>
       <p class="modal-desc">We'll extract your skills and match them against open positions.</p>
@@ -480,13 +531,14 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
           <div class="dz-title">Drag & drop resume here</div>
           <div class="dz-sub">or click to browse files</div>
-          <div class="dz-filename" id="dzFilename"></div><input type="file" id="fileInput" accept=".pdf,.docx,.txt" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:10;">
-          
+          <div class="dz-filename" id="dzFilename"></div>
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt">
         </label>
       </form>
       <div class="format-note">Supported formats: PDF · DOCX · TXT</div>
       <button class="btn btn-primary btn-block" id="analyzeBtn" style="margin-top:22px;" disabled>Analyze resume</button>
     </div>
+
     <div id="uploadStepLoading" class="loading-state" style="display:none;">
       <div class="loading-ring"></div>
       <div class="loading-msg" id="loadingMsg">Analyzing your resume…</div>
@@ -496,6 +548,7 @@
         <div class="loading-substep" data-step="2"><span class="dot"></span>Finding your skill gaps</div>
       </div>
     </div>
+
     <div id="uploadStepSuccess" class="success-state" style="display:none;">
       <div class="success-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>
       <h3>Resume analyzed successfully</h3>
@@ -504,7 +557,7 @@
   </div>
 </div>
 
-<!-- Match modal -->
+<!-- Match result modal -->
 <div class="modal-backdrop" id="modalMatch">
   <div class="modal">
     <button class="modal-close" data-close-modal aria-label="Close">✕</button>
@@ -514,7 +567,7 @@
         <svg viewBox="0 0 120 120">
           <defs>
             <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a855f7"/>
+              <stop offset="0%" stop-color="#4338CA"/><stop offset="100%" stop-color="#7C3AED"/>
             </linearGradient>
           </defs>
           <circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
@@ -538,7 +591,7 @@
   </div>
 </div>
 
-<!-- Learning modal -->
+<!-- Learning recommendations modal -->
 <div class="modal-backdrop" id="modalLearn">
   <div class="modal modal-wide">
     <button class="modal-close" data-close-modal aria-label="Close">✕</button>
@@ -556,7 +609,7 @@
     <!-- Normal Sign-In / Register Form -->
     <div id="authStepForm">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <h3 id="authModalTitle" style="margin:0;">Sign in to CareerIQ</h3>
+        <h3 id="authModalTitle" style="margin:0;">Sign in to Career Sensei</h3>
       </div>
       <p class="modal-desc" id="authModalDesc">Welcome back. Enter your credentials to access your portal.</p>
 
@@ -652,8 +705,56 @@
   </div>
 </div>
 
+
+<div class="offer-celebration" id="offerCelebration" role="dialog" aria-modal="true" aria-labelledby="offerCelebrationTitle" aria-hidden="true" hidden>
+  <div class="offer-confetti" id="offerConfetti" aria-hidden="true"></div>
+  <div class="offer-celebration-card">
+    <button class="offer-close" id="offerCelebrationClose" type="button" aria-label="Close offer celebration">×</button>
+    <div class="offer-trophy" aria-hidden="true">✦</div>
+    <span class="offer-kicker">A BIG CAREER MOMENT</span>
+    <h2 id="offerCelebrationTitle">You got an offer!</h2>
+    <p id="offerCelebrationMessage">Your hard work is paying off.</p>
+    <button class="btn btn-primary" id="offerCelebrationDone" type="button">Celebrate!</button>
+  </div>
+</div>
+
 <div class="toast-stack" id="toastStack"></div>
 
-<script src="/static/js/app.js?v=6000001"></script>
+<script>
+(function(){
+  var root = document.documentElement;
+  var nav = document.querySelector('.nav');
+  function onScroll(){ if (nav) nav.classList.toggle('scrolled', window.scrollY > 8); }
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  var hv = document.querySelector('.hero-visual');
+  if (hv && root.classList.contains('js-reveal') && window.matchMedia && matchMedia('(hover: hover)').matches) {
+    var raf = 0;
+    hv.parentNode.parentNode.addEventListener('mousemove', function(e){
+      if (raf) return;
+      raf = requestAnimationFrame(function(){
+        raf = 0;
+        var r = hv.getBoundingClientRect();
+        hv.style.setProperty('--px', Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2))).toFixed(3));
+        hv.style.setProperty('--py', Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2))).toFixed(3));
+      });
+    });
+  }
+
+  if (root.classList.contains('js-reveal') && window.IntersectionObserver) {
+    var targets = document.querySelectorAll('#view-home .section-head, #view-home .step, #view-home .stat, #view-home .final-cta, #view-home .ci-grid > div');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    targets.forEach(function(el, i){
+      el.classList.add('reveal');
+      el.style.transitionDelay = (el.classList.contains('step') || el.classList.contains('stat')) ? ((i % 5) * 70) + 'ms' : '0ms';
+      io.observe(el);
+    });
+  }
+})();
+</script>
+
+<script src="/static/js/app.js?v=106"></script>
 </body>
 </html>

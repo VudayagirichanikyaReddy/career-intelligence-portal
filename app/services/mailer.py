@@ -16,7 +16,7 @@ APP_BASE_URL = os.getenv("APP_BASE_URL", "http://127.0.0.1:8000")
 def send_recruiter_invite_email(to_email: str, company_name: str, invite_code: str):
     activation_url = f"{APP_BASE_URL}/?invite={invite_code}"
     
-    subject = f"You're invited to join {company_name} on CareerIQ"
+    subject = f"You're invited to join {company_name} on Career Sensei"
     
     html_content = f"""
     <!DOCTYPE html>
@@ -38,7 +38,7 @@ def send_recruiter_invite_email(to_email: str, company_name: str, invite_code: s
       <div class="card">
         <span class="badge">Official Invitation</span>
         <h2>Access the {company_name} Talent Pipeline</h2>
-        <p>You have been authorized as a verified recruiter for <strong>{company_name}</strong> on CareerIQ. Use your unique single-use code below to complete your setup:</p>
+        <p>You have been authorized as a verified recruiter for <strong>{company_name}</strong> on Career Sensei. Use your unique single-use code below to complete your setup:</p>
         
         <div class="code-box">{invite_code}</div>
         
@@ -47,7 +47,7 @@ def send_recruiter_invite_email(to_email: str, company_name: str, invite_code: s
         <p style="font-size: 12.5px; color: #64748b;">This code expires in 48 hours and can only be redeemed by {to_email}.</p>
         
         <div class="footer">
-          CareerIQ Recruitment Platform &bull; Automated Security Dispatch
+          Career Sensei Recruitment Platform &bull; Automated Security Dispatch
         </div>
       </div>
     </body>

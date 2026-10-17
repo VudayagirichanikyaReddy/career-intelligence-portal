@@ -186,9 +186,31 @@ async def upload_resume(
         Applicant.user_id == user_id
     ).first()
 
-    # If applicant exists, update the resume
+    # If applicant exists, wipe old profile data and update resume
     if applicant:
         applicant.resume_text = resume_text
+        applicant.full_name = "New Applicant"
+        applicant.university = None
+        applicant.degree = None
+        applicant.branch = None
+        applicant.gpa = None
+        applicant.experience_years = 0
+
+        # Clear existing skills and past evaluations for this applicant
+        db.execute(
+            text("""
+                DELETE FROM applicant_skills
+                WHERE applicant_id = :applicant_id
+            """),
+            {"applicant_id": applicant.applicant_id}
+        )
+        db.execute(
+            text("""
+                DELETE FROM match_results
+                WHERE applicant_id = :applicant_id
+            """),
+            {"applicant_id": applicant.applicant_id}
+        )
 
         db.commit()
         db.refresh(applicant)
@@ -196,7 +218,7 @@ async def upload_resume(
         return {
             "applicant_id": applicant.applicant_id,
             "filename": file.filename,
-            "message": "Resume uploaded and existing applicant profile updated."
+            "message": "Resume uploaded and existing applicant profile reset and updated."
         }
 
     # If applicant does not exist, create one
@@ -250,7 +272,7 @@ def parse_resume(
 
     # Convert AI response into JSON
     try:
-        parsed_data = json.loads(ai_result)
+       parsed_data = ai_result if isinstance(ai_result, dict) else json.loads(ai_result)
 
     except json.JSONDecodeError:
         raise HTTPException(
@@ -291,7 +313,7 @@ def parse_resume(
     applicant.gpa = gpa_value
 
     applicant.experience_years = parsed_data.get(
-        "experience_years"
+        "experience_years", 0
     )
 
     # -----------------------------
@@ -736,6 +758,7 @@ def evaluate_applicant(
         "position_id": position_id,
         "position": position.title,
         "match_score": round(match_score, 2),
+        "match_percentage": round(match_score, 2),
         "matched_skills": matched_skills,
         "missing_skills": missing_skills,
         "gpa": applicant.gpa,
@@ -747,65 +770,4 @@ def evaluate_applicant(
         "eligible": eligible,
         "skill_gap": skill_gap,
         "summary": ai_summary
-    }
-
-class AddSkillRequest(BaseModel):
-    skill_name: str
-    proficiency_level: str = "Intermediate"
-
-
-@router.post("/{applicant_id}/add-skill")
-def add_applicant_skill(
-    applicant_id: int,
-    request: AddSkillRequest,
-    db: Session = Depends(get_db)
-):
-    skill_name = request.skill_name.strip()
-    if not skill_name:
-        raise HTTPException(status_code=400, detail="Skill name cannot be empty.")
-
-    # 1. Find or create skill in skills table
-    skill = db.execute(
-        text("SELECT skill_id, skill_name FROM skills WHERE LOWER(skill_name) = LOWER(:s)"),
-        {"s": skill_name}
-    ).fetchone()
-
-    if not skill:
-        db.execute(
-            text("INSERT INTO skills (skill_name) VALUES (:s)"),
-            {"s": skill_name}
-        )
-        db.commit()
-        skill = db.execute(
-            text("SELECT skill_id, skill_name FROM skills WHERE LOWER(skill_name) = LOWER(:s)"),
-            {"s": skill_name}
-        ).fetchone()
-
-    # 2. Check if applicant already has this skill
-    exists = db.execute(
-        text("""
-            SELECT applicant_id FROM applicant_skills
-            WHERE applicant_id = :applicant_id AND skill_id = :skill_id
-        """),
-        {"applicant_id": applicant_id, "skill_id": skill.skill_id}
-    ).fetchone()
-
-    if not exists:
-        db.execute(
-            text("""
-                INSERT INTO applicant_skills (applicant_id, skill_id)
-                VALUES (:applicant_id, :skill_id)
-            """),
-            {
-                "applicant_id": applicant_id,
-                "skill_id": skill.skill_id,
-                
-            }
-        )
-        db.commit()
-
-    return {
-        "message": f"Skill {skill_name} added successfully",
-        "skill_name": skill.skill_name,
-        "applicant_id": applicant_id
     }

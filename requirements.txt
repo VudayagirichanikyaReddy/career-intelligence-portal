@@ -7,3 +7,7 @@ python-multipart
 openai
 jinja2
 pydantic
+pypdf
+python-docx
+google-api-python-client
+reportlab
